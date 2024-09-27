@@ -1,0 +1,40 @@
+/* lab1.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #4CAF50; /* Зелёный фон */
+    color: white; /* Белый текст */
+    padding: 10px 0;
+    text-align: center;
+}
+
+footer {
+    background-color: #333; /* Тёмный фон */
+    color: white; /* Белый текст */
+    text-align: center;
+    padding: 10px 0;
+    position: fixed; /* Закрепляем внизу страницы */
+    left: 0;
+    bottom: 0;
+    width: 100%; /* Полная ширина */
+}
+
+h1 {
+    font-size: 24px; /* Размер шрифта заголовка */
+}
+
+h2 {
+    font-size: 20px; /* Размер шрифта подзаголовка */
+}
+
+a {
+    color: #4CAF50; /* Цвет ссылок */
+    text-decoration: none; /* Без подчеркивания */
+}
+
+a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
