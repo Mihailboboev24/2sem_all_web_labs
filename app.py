@@ -252,5 +252,52 @@ def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase = phrase)
     
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    sum = a + b
+    razn = a - b
+    umn = a * b
+    dele = a / b if b != 0 else 'деление на 0'
+    step = a ** b
+    return f'''
+<!doctype html>
+<html>
+    <body>
+        <h1>Расчёт с параметрами:</h1>
+        <p>Сумма: {a} + {b} = {sum}</p>
+        <p>Разность: {a} - {b} = {razn}</p>
+        <p>Умножение: {a} X {b} = {umn}</p>
+        <p>Деление: {a} / {b} = {dele}</p>
+        <p>Возведение в степень: {a}<sup>{b}</sup> = {step}</p>
+    </body>
+</html>
+'''
+# Функция Flask redirect перенаправляет пользователя на другой маршрут
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect('/lab2/calc/1/1')
+@app.route('/lab2/calc/<int:a>')
+def calc_redirect(a):
+    return redirect(url_for('calc', a=a, b=1))
+
+
+books = [
+    {"author": "Джордж Оруэлл", "title": "1984", "genre": "Антиутопия", "pages": 328},
+    {"author": "Габриэль Гарсиа Маркес", "title": "Сто лет одиночества", "genre": "Магический реализм", "pages": 417},
+    {"author": "Джон Стейнбек", "title": "Гроздья гнева", "genre": "Социальный роман", "pages": 464},
+    {"author": "Фрэнсис Скотт Фицджеральд", "title": "Великий Гэтсби", "genre": "Роман", "pages": 180},
+    {"author": "Герман Мелвилл", "title": "Моби Дик", "genre": "Приключенческий роман", "pages": 635},
+    {"author": "Даниэль Дефо", "title": "Робинзон Крузо", "genre": "Приключения", "pages": 320},
+    {"author": "Артур Конан Дойл", "title": "Шерлок Холмс. Собрание сочинений", "genre": "Детектив", "pages": 944},
+    {"author": "Джейн Остин", "title": "Гордость и предубеждение", "genre": "Роман", "pages": 432},
+    {"author": "Жюль Верн", "title": "Двадцать тысяч лье под водой", "genre": "Фантастика", "pages": 456},
+    {"author": "Чарльз Диккенс", "title": "Приключения Оливера Твиста", "genre": "Социальный роман", "pages": 554}
+]
+
+@app.route('/lab2/books/')
+def book_list():
+    return render_template('books.html', books=books)
+
 if __name__ == "__main__":
     app.run(debug=False)
