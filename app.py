@@ -157,17 +157,16 @@ def custom():
 </html>
 '''
 
-if __name__ == "__main__":
-    app.run(debug=True)
 
 @app.route('/lab2/a')
 def a():
     return 'без слэша'
+
 @app.route('/lab2/a/')
 def a2():
     return 'со слэшем'
 
-flower_list = ('подсолнух', 'папортоник', 'незабудка', 'лопух')
+flower_list = ['подсолнух', 'папортоник', 'незабудка', 'лопух']
 
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
@@ -190,3 +189,10 @@ def add_flower(name):
     </body>
 </html>
 '''
+
+@app.route('/lab2/example')
+def example():
+    return render_template('example.html')
+
+if __name__ == "__main__":
+    app.run(debug=True)
