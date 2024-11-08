@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 3{% endblock %}
+{% block main %}
+    <h1>Оплата</h1>
+    <h3>
+        Сумма к оплате: {{ price }}
+    </h3>
+    <form action="/lab3/success">
+        <input type="hidden" name="price" value="{{ price }}">
+        <div class="area">
+            <div>Номер банковской карты:</div>
+            <label>
+                <input type="text" name="card" pattern="\d{16}">
+            </label>
+            <div>Имя держателя карты:</div>
+            <label>
+                <input type="text" name="name">
+            </label>
+            <div>Номер CVV:</div>
+            <label>
+                <input type="text" name="cvv" size="3" pattern="\d{3}">
+            </label>
+        </div>
+        
+        <div>
+            <button type="submit">Оплатить</button><br>
+            <a href="/lab3/order">Отказаться</a>
+        </div>
+    </form>
+{% endblock %}
+{% block style %}
+<style>
+    input {
+        margin: 8px 0;
+        cursor: pointer;
+    }
+    .area {
+        font-size: larger;
+        font-family: Arial;
+        color: white;
+        font-weight: bold;
+        text-shadow:
+            0 0 3px #fff,
+            0 0 5px rgb(255, 125, 125),
+            0 0 7px rgb(255, 105, 105),
+            0 0 6px rgb(250, 24, 24);
+        background-color: rgb(250, 24, 24);
+        padding: 15px;
+        text-align: center;
+        max-width: 30%;
+        border-radius: 15px;
+        margin-bottom: 10px;
+    }
+    button {
+        background-color: black;
+        font-weight: bold;
+        color: white;
+        border-radius: 15px;
+        padding: 10px;
+        cursor: pointer;
+        font-size: large;
+        width: 13%;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
