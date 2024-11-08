@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{# номер лабораторной работы: #}
+{% block lab %}Лабораторная работа 3{% endblock %}
+{# основной контент: #}
+{% block main %}
+    <h1>Результаты поиска фильмов</h1>
+    <h2>Цена от {{ min_price }} до {{ max_price }} рублей:</h2>
+    {% if games %}
+        <ul>
+            {% for game in games %}
+                <li>{{ game.title }} — {{ game.price }} руб. (Жанр: {{ game.genre }}, Год: {{ game.year }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет фильмов в заданном диапазоне</p>
+    {% endif %}
+    <a href="/lab3/search">Вернуться к поиску</a>
+{% endblock %}

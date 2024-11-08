@@ -133,3 +133,36 @@ def ticket_result():
         berth=berth, bedding=bedding, 
         luggage=luggage, insurance=insurance,
         ticket_type=ticket_type, price=price)
+
+games = [
+    {'title': 'The Witcher 3: Wild Hunt', 'price': 306, 'genre': 'Ролевая игра', 'year': 2015},
+    {'title': 'Cyberpunk 2077', 'price': 604, 'genre': 'Ролевая игра', 'year': 2020},
+    {'title': 'Dark Souls III', 'price': 400, 'genre': 'Экшен', 'year': 2016},
+    {'title': 'Red Dead Redemption 2', 'price': 307, 'genre': 'Приключения', 'year': 2018},
+    {'title': 'Mass Effect 2', 'price': 450, 'genre': 'Научная фантастика', 'year': 2010},
+    {'title': 'Grand Theft Auto V', 'price': 350, 'genre': 'Криминал', 'year': 2013},
+    {'title': 'The Legend of Zelda: Breath of the Wild', 'price': 530, 'genre': 'Приключения', 'year': 2017},
+    {'title': 'The Elder Scrolls V: Skyrim', 'price': 551, 'genre': 'Ролевая игра', 'year': 2011},
+    {'title': 'God of War', 'price': 640, 'genre': 'Экшен', 'year': 2018},
+    {'title': 'Horizon Zero Dawn', 'price': 700, 'genre': 'Научная фантастика', 'year': 2017},
+    {'title': 'Assassin’s Creed Odyssey', 'price': 420, 'genre': 'Ролевая игра', 'year': 2018},
+    {'title': 'The Sims 4', 'price': 300, 'genre': 'Симулятор', 'year': 2014},
+    {'title': 'Star Wars Jedi: Fallen Order', 'price': 750, 'genre': 'Научная фантастика', 'year': 2019},
+    {'title': 'Age of Empires II', 'price': 520, 'genre': 'Стратегия', 'year': 1999},
+    {'title': 'Minecraft', 'price': 401, 'genre': 'Песочница', 'year': 2011},
+    {'title': 'DOOM (1993)', 'price': 660, 'genre': 'Шутер', 'year': 1993},
+    {'title': 'Stardew Valley', 'price': 370, 'genre': 'Симулятор', 'year': 2016},
+    {'title': 'The Elder Scrolls III: Morrowind', 'price': 708, 'genre': 'Фэнтези', 'year': 2002},
+    {'title': 'World of Warcraft', 'price': 650, 'genre': 'MMORPG', 'year': 2004},
+    {'title': 'Sea of Thieves', 'price': 550, 'genre': 'Приключения', 'year': 2018}
+]
+
+@lab3.route('/lab3/search')
+def search():
+    return render_template('lab3/search.html')
+@lab3.route('/lab3/search-results')
+def search_results():
+    min_price = request.args.get('min_price', type=int)
+    max_price = request.args.get('max_price', type=int)
+    filtered_games = [game for game in games if min_price <= game['price'] <= max_price]
+    return render_template('lab3/search_results.html', games=filtered_games, min_price=min_price, max_price=max_price)
