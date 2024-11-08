@@ -57,7 +57,7 @@ def add_flower_without_name():
 @lab2.route('/lab2/flowers/')
 def list_flowers():
     flower_count = len(flower_list)
-    return render_template('flowers.html', flower_list=flower_list, flower_count=flower_count)
+    return render_template('lab2/flowers.html', flower_list=flower_list, flower_count=flower_count)
 @lab2.route('/lab2/clear_flowers/')
 def clear_flowers():
     flower_list.clear()  # Очищаем список
@@ -83,11 +83,11 @@ def example():
         {'name': 'арбуз', 'price': 43},
         {'name': 'ежевика', 'price': 231}
     ]
-    return render_template('example.html', name=name, group_student=group_student, number_course=number_course, fruits=fruits)
+    return render_template('lab2/example.html', name=name, group_student=group_student, number_course=number_course, fruits=fruits)
 
 @lab2.route('/lab2/')
 def lab():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 
 @lab2.route('/lab2/filters')
@@ -140,7 +140,7 @@ books = [
 
 @lab2.route('/lab2/books/')
 def book_list():
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 movies = [
     {"title": "Начало", "description": "Фантастический триллер о мире снов и манипуляций сознанием.", "image": "inception.jpg"},
@@ -152,4 +152,4 @@ movies = [
 
 @lab2.route('/lab2/movies/')
 def movie_list():
-    return render_template('movies.html', movies=movies)
+    return render_template('lab2/movies.html', movies=movies)
