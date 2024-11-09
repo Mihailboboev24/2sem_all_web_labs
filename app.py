@@ -2,11 +2,13 @@ from flask import Flask, redirect, render_template, url_for
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
+from lab4 import lab4
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
 app.register_blueprint(lab3)
+app.register_blueprint(lab4)
 
 @app.route("/")
 @app.route("/index")
@@ -45,6 +47,9 @@ def menu():
                     </li>
                     <li>
                         <a href="/lab3">Третья лабораторная</a>
+                    </li>
+                    <li>
+                        <a href="/lab4">Четвертая лабораторная</a>
                     </li>
                     <li>
                         <a href="/lab1/student">Студент</a>
