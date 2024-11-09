@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 lab4 = Blueprint('lab4', __name__)
 
 @lab4.route('/lab4/')
@@ -84,20 +84,21 @@ def exponentation():
         return render_template('lab4/exponentation.html', x1=x1, x2=x2, result=result)
     return render_template('lab4/exponentation.html', error='Оба поля равны нулю!')
 
-
 tree_count = 0
 MAX_TREES = 10  # Максимальное количество деревьев
 
 @lab4.route('/lab4/tree', methods=['GET', 'POST'])
 def tree():
     global tree_count
-    if request.method == 'GET':
-        return render_template('lab4/tree.html', tree_count=tree_count)
+    if request.method == 'POST':
+        operation = request.form.get('operation')
+        if operation == 'cut' and tree_count > 0:  # Уменьшаем, если деревьев больше нуля
+            tree_count -= 1
+        elif operation == 'plant' and tree_count < MAX_TREES:  # Увеличиваем, если меньше MAX_TREES
+            tree_count += 1
+        
+        # После изменения значения счетчика делаем редирект на GET-запрос страницы
+        return redirect(url_for('lab4.tree'))
     
-    operation = request.form.get('operation')
-    if operation == 'cut' and tree_count > 0:  # Уменьшаем, если деревьев больше нуля
-        tree_count -= 1
-    elif operation == 'plant' and tree_count < MAX_TREES:  # Увеличиваем, если меньше MAX_TREES
-        tree_count += 1
-    
+    # Обрабатываем GET-запрос, отображая страницу с текущим значением счетчика
     return render_template('lab4/tree.html', tree_count=tree_count)
