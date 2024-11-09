@@ -110,19 +110,40 @@ users = [
     {'login': 'Energy', 'password': 'Doom', 'name': 'Doomslayer', 'gender': 'male'},
 ]
 
-@lab4.route('/lab4/login', methods = ['GET', 'POST'])
+@lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
+        # Проверяем, есть ли пользователь в сессии
         if 'login' in session:
-            authorized=True
+            authorized = True
             name = session.get('name', '')
         else:
-            authorized=False
+            authorized = False
             name = ''
         return render_template('lab4/login.html', authorized=authorized, name=name)
 
+    # Обработка POST-запроса при входе
     login = request.form.get('login')
     password = request.form.get('password')
+
+    if not login:
+        error = 'Не введён логин'
+        return render_template('lab4/login.html', error=error, authorized=False, login=login)
+    elif not password:
+        error = 'Не введён пароль'
+        return render_template('lab4/login.html', error=error, authorized=False, login=login)
+
+    # Проверка логина и пароля
+    for user in users:
+        if login == user['login'] and password == user['password']:
+            # Сохраняем логин и имя в сессии при успешной авторизации
+            session['login'] = login
+            session['name'] = user['name']
+            return redirect('/lab4/login')
+
+    error = 'Неверные логин и/или пароль'
+    return render_template('lab4/login.html', error=error, authorized=False, login=login)
+
 
     if not login:
         error = 'Не введён логин'
@@ -261,7 +282,7 @@ def delete_user():
         users = [user for user in users if user['login'] != login_to_delete]
         session.pop('login', None)
     return redirect('/lab4/login')
-    
+
 @lab4.route('/lab4/edit_user', methods=['GET', 'POST'])
 def edit_user():
     if 'login' not in session:
