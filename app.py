@@ -5,6 +5,9 @@ from lab3 import lab3
 from lab4 import lab4
 
 app = Flask(__name__)
+
+app.secret_key = 'жаль конечно этого добряка'
+
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
 app.register_blueprint(lab3)
