@@ -83,3 +83,21 @@ def exponentation():
         result = x1 ** x2
         return render_template('lab4/exponentation.html', x1=x1, x2=x2, result=result)
     return render_template('lab4/exponentation.html', error='Оба поля равны нулю!')
+
+
+tree_count = 0
+MAX_TREES = 10  # Максимальное количество деревьев
+
+@lab4.route('/lab4/tree', methods=['GET', 'POST'])
+def tree():
+    global tree_count
+    if request.method == 'GET':
+        return render_template('lab4/tree.html', tree_count=tree_count)
+    
+    operation = request.form.get('operation')
+    if operation == 'cut' and tree_count > 0:  # Уменьшаем, если деревьев больше нуля
+        tree_count -= 1
+    elif operation == 'plant' and tree_count < MAX_TREES:  # Увеличиваем, если меньше MAX_TREES
+        tree_count += 1
+    
+    return render_template('lab4/tree.html', tree_count=tree_count)
