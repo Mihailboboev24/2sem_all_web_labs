@@ -103,6 +103,13 @@ def tree():
     # Обрабатываем GET-запрос, отображая страницу с текущим значением счетчика
     return render_template('lab4/tree.html', tree_count=tree_count)
 
+users = [
+    {'login': 'King', 'password': '123456'},
+    {'login': 'Various Artist', 'password': '111'},
+    {'login': 'Sergo', 'password': 'Sektor'},
+    {'login': 'Energy', 'password': 'Doom'},
+]
+
 @lab4.route('/lab4/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -111,5 +118,8 @@ def login():
     password = request.form.get('password')
     if login == 'alex' and password == '123':
         return render_template('lab4/login.html', login=login, authorized=True)
+    for user in users:
+        if login == user['login'] and password == user['password']:
+            return render_template('lab4/login.html', login=login, authorized=True)
     error = 'Неверные логин и/или пароль'
     return render_template('lab4/login.html', error=error, authorized=False)
