@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+
 {# номер лабораторной работы: #}
 {% block lab %}Лабораторная работа 5{% endblock %}
+
 {# основной контент: #}
 {% block main %}
     <h1>База знаний</h1>
@@ -8,18 +10,21 @@
         {% if login == 'Anonymous' %}
             <a href="/lab5/login"><button>Вход</button></a>
             <a href="/lab5/register"><button>Регистрация</button></a>
-            <a href="/lab5/list"><button>Cписок статей</button></a>
+            <a href="/lab5/list"><button>Cписок моих статей</button></a>
+            <a href="/lab5/public"><button>Публичные статьи</button></a>
             <a href="/lab5/create"><button>Cоздать статью</button></a>
             <div><i>Anonymous</i></div>
         {% else %}
             <a href="/lab5/logout"><button>Выход</button></a>
-            <a href="/lab5/list"><button>Cписок статей</button></a>
+            <a href="/lab5/list"><button>Cписок моих статей</button></a>
             <a href="/lab5/create"><button>Cоздать статью</button></a>
+            <a href="/lab5/public"><button>Публичные статьи</button></a>
+            <a href="/lab5/users"><button>Все пользователи</button></a>
             <div><i>{{ login }}</i></div>
         {% endif %}
     </div>
 {% endblock %}
-{% block style %}
 
+{% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='lab5/lab5.css') }}">
 {% endblock %}
