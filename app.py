@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, render_template, url_for
 from lab1 import lab1
 from lab2 import lab2
@@ -7,7 +8,8 @@ from lab5 import lab5
 
 app = Flask(__name__)
 
-app.secret_key = 'жаль конечно этого добряка'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'другой-секретный-секрет')
+app.config['DB_TYPE'] = os.environ('DB_TYPE', 'postgres')
 
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
