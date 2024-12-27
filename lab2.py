@@ -143,11 +143,11 @@ def book_list():
     return render_template('lab2/books.html', books=books)
 
 movies = [
-    {"title": "Начало", "description": "Фантастический триллер о мире снов и манипуляций сознанием.", "image": "inception.jpg"},
-    {"title": "Зелёная миля", "description": "Драма о тюремной охране и необычном заключённом с даром исцеления.", "image": "green_mile.jpg"},
-    {"title": "Побег из Шоушенка", "description": "История о надежде и дружбе заключённых в тюрьме.", "image": "shawshank_redemption.jpg"},
-    {"title": "Темный рыцарь", "description": "Фильм о Бэтмене, который сталкивается с Джокером в Готэме.", "image": "dark_knight.jpg"},
-    {"title": "Форрест Гамп", "description": "История простого человека с богатым жизненным опытом.", "image": "forrest_gump.jpg"}
+    {"title": "Начало", "description": "Фантастический триллер о мире снов и манипуляций сознанием.", "image": "lab2/inception.jpg"},
+    {"title": "Зелёная миля", "description": "Драма о тюремной охране и необычном заключённом с даром исцеления.", "image": "lab2/green_mile.jpg"},
+    {"title": "Побег из Шоушенка", "description": "История о надежде и дружбе заключённых в тюрьме.", "image": "lab2/shawshank_redemption.jpg"},
+    {"title": "Темный рыцарь", "description": "Фильм о Бэтмене, который сталкивается с Джокером в Готэме.", "image": "lab2/dark_knight.jpg"},
+    {"title": "Форрест Гамп", "description": "История простого человека с богатым жизненным опытом.", "image": "lab2/forrest_gump.jpg"}
 ]
 
 @lab2.route('/lab2/movies/')
