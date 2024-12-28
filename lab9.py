@@ -131,3 +131,9 @@ def show_congratulation():
         congratulation=session['congratulation'],
         gift_image=session['gift_image']
     )
+
+# Сброс данных
+@lab9.route('/lab9/reset/')
+def reset():
+    session.clear()
+    return redirect(url_for('lab9.main'))
