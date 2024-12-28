@@ -133,6 +133,7 @@ def put_film(id):
     
     db_close(conn, cur)
     return jsonify(film)
+#уже добавил
 
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
