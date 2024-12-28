@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 9{% endblock %}
+{% block main %}
+    <h1>Привет, {{ username }}!</h1>
+    <h3>Ваш возраст: {{ age }}, пол: {{ 'мужской' if gender == 'male' else 'женский' }}</h3>
+    <h3>Вы выбрали: {{ choice }}</h3>
+    <h3>Теперь уточните:</h3>
+    <form method="post">
+        {% if choice == "красивое" %}
+            <button name="more_choice" value="сытное">сытное</button>
+            <button name="more_choice" value="вкусное">вкусное</button>
+        {% elif choice == "хорошее" %}
+            <button name="more_choice" value="воодушевляющее">воодушевляющее</button>
+            <button name="more_choice" value="искусство">искусство</button>
+        {% endif %}
+    </form>
+{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='lab9/lab9.css') }}">
+{% endblock %}
