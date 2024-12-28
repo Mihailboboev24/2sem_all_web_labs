@@ -96,7 +96,7 @@ def more_preferences():
                 gift_image = "bulba.jpg"
                 wish = "пусть бульба тебя радует)))"
             elif more_choice == "вкусное":
-                gift_image = "pizza.jpeg"
+                gift_image = "pizza.jpg"
                 wish = "наслаждайся)))"
         elif choice == "хорошее":
             if more_choice == "воодушевляющее":

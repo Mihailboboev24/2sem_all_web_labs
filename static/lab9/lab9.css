@@ -79,13 +79,14 @@ a:hover {
 
 /* Изображения */
 img {
-    max-width: 100%;
-    height: auto;
+    width: 400px; /* Фиксированная ширина */
+    height: 600px; /* Фиксированная высота */
     margin: 0 auto;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: block;
     transition: transform 0.3s;
+    object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
 }
 
 img:hover {
