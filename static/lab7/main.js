@@ -109,7 +109,10 @@ function sendFilm() {
         }
         return resp.json();
     })
-    
+    .then(function(errors) {
+        if(errors.error)
+            document.getElementById('description-error').innerText = errors.error;
+    });
 }
 
 function editFilm(id) {
