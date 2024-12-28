@@ -1,75 +1,189 @@
-from flask import Blueprint, render_template, request, abort, jsonify
-
+from flask import Blueprint, render_template, request, abort, jsonify, current_app
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import sqlite3
+from os import path
+from datetime import datetime
 
 lab7 = Blueprint('lab7', __name__)
 
 @lab7.route('/lab7/')
 def main():
     return render_template('lab7/index.html')
-films = [
-    {
-        "title": "Inception",
-        "title_ru": "Начало",
-        "year": 2010,
-        "description": "Дом Кобб – талантливый вор, лучший из лучших в опасном искусстве извлечения: он крадет ценные секреты из глубин подсознания во время сна, когда человеческий разум наиболее уязвим. Но теперь ему предстоит не украсть идею, а внедрить её. Если он преуспеет, это станет идеальным преступлением."
-    },
-    {
-        "title": "The Grand Budapest Hotel",
-        "title_ru": "Отель «Гранд Будапешт»",
-        "year": 2014,
-        "description": "Фильм рассказывает об увлекательных приключениях легендарного консьержа отеля «Гранд Будапешт» и его юного помощника, которые становятся обладателями бесценного произведения искусства и оказываются в центре заговора, связанного с огромным состоянием семьи."
-    },
-    {
-        "title": "Interstellar",
-        "title_ru": "Интерстеллар",
-        "year": 2014,
-        "description": "Когда засуха приводит человечество к продовольственному кризису, команда исследователей и учёных отправляется сквозь червоточину (которая предположительно соединяет области пространства-времени через большое расстояние) в путешествие, чтобы превзойти прежние ограничения для космических путешествий человека и найти планету с подходящими для человечества условиями."
-    },
-    {
-        "title": "The Dark Knight",
-        "title_ru": "Тёмный рыцарь",
-        "year": 2008,
-        "description": "Бэтмен поднимает ставки в своей войне с преступностью. С помощью лейтенанта Джима Гордона и прокурора Харви Дента он намерен очистить улицы Готэма от преступности. Но всё усложняется с появлением нового преступника – Джокера, который сеет хаос и ставит под угрозу планы Бэтмена."
-    },
-    {
-        "title": "La La Land",
-        "title_ru": "Ла-Ла Ленд",
-        "year": 2016,
-        "description": "Джазовый музыкант и начинающая актриса встречаются и влюбляются друг в друга в Лос-Анджелесе, городе, где мечты часто разбиваются о суровую реальность. Их любовь и стремление к успеху сталкиваются с трудностями, которые испытывают их отношения."
-    },
-]
+
+
+def db_connect():
+    if current_app.config['DB_TYPE'] == 'postgres':
+        conn = psycopg2.connect(
+            host = '127.0.0.1',
+            database = 'michail_boboev_knowledge_base',
+            user = 'michail_boboev_knowledge_base',
+            password = '123'
+        )
+        cur = conn.cursor(cursor_factory =  RealDictCursor)
+    else:
+        dir_path = path.dirname(path.realpath(__file__))
+        db_path = path.join(dir_path, "database.db")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        
+    return conn, cur
+
+
+def db_close(conn, cur):
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
-    return films
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM films;")
+    else:
+        cur.execute("SELECT * FROM films;")
+    
+    films = cur.fetchall()
+    db_close(conn, cur)
+    return jsonify([dict(film) for film in films])
+
+
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    if 0 <= id < len(films):
-        return films[id]
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM films WHERE id = %s;", (id,))
+    else:
+        cur.execute("SELECT * FROM films WHERE id = ?;", (id,))
+    
+    film = cur.fetchone()
+    db_close(conn, cur)
+
+    if film:
+        return jsonify(dict(film))
     else:
         abort(404)
 
+
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def del_film(id):
-    if 0 <= id < len(films):
-        del films[id]
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("DELETE FROM films WHERE id = %s RETURNING id;", (id,))
+    else:
+        cur.execute("DELETE FROM films WHERE id = ?;", (id,))
+    
+    deleted = cur.rowcount
+    db_close(conn, cur)
+
+    if deleted > 0:
         return '', 204
     else:
         abort(404)
 
+
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    if 0 <= id < len(films):
-        film = request.get_json()
-        films[id] = film
-        return films[id]
+    film = request.get_json()
+    if not film or not isinstance(film, dict):
+        abort(400)
+    
+    # Проверяем оригинальное название
+    if not film.get('title') and not film['title_ru']:
+        return {'error': 'Название на оригинальном языке обязательно, если нет и русского названия'}, 400
+    
+    # Проверяем, что русское название заполнено
+    if not film.get('title_ru'):
+        return {'error': 'Русское название обязательно'}, 400
+    
+    # Если оригинальное название пустое, копируем русское
+    if not film.get('title'):
+        film['title'] = film['title_ru']
+
+    # Вычисляем текущий год
+    current_year = datetime.now().year
+
+    # Преобразуем год в число, если он передан как строка
+    try:
+        year = int(film.get('year'))
+    except ValueError:
+        return {'error': 'Год должен быть числом'}, 400
+    
+    # Проверяем год выпуска
+    if year < 1895 or year > current_year:
+        return {'error': f'Год должен быть от 1895 до {current_year}'}, 400
+
+    # Проверяем описание
+    if not film.get('description') or len(film['description']) > 2000:
+        return {'error': 'Описание обязательно и не должно превышать 2000 символов'}, 400
+    
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute(
+            "UPDATE films SET title = %s, title_ru = %s, year = %s, description = %s WHERE id = %s;",
+            (film['title'], film['title_ru'], film['year'], film['description'], id)
+        )
     else:
-        abort(404)
+        cur.execute(
+            "UPDATE films SET title = ?, title_ru = ?, year = ?, description = ? WHERE id = ?;",
+            (film['title'], film['title_ru'], film['year'], film['description'], id)
+        )
+    
+    db_close(conn, cur)
+    return jsonify(film)
+
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
     film = request.get_json()
     if not film or not isinstance(film, dict):
         abort(400)
-    films.append(film)
-    new_index = len(films) - 1
-    return jsonify({"id": new_index}), 201
+
+    # Проверяем оригинальное название
+    if not film.get('title') and not film['title_ru']:
+        return {'error': 'Название на оригинальном языке обязательно, если нет и русского названия'}, 400
+    
+    # Проверяем, что русское название заполнено
+    if not film.get('title_ru'):
+        return {'error': 'Русское название обязательно'}, 400
+    
+    # Если оригинальное название пустое, копируем русское
+    if not film.get('title'):
+        film['title'] = film['title_ru']
+
+    # Вычисляем текущий год
+    current_year = datetime.now().year
+
+    # Преобразуем год в число, если он передан как строка
+    try:
+        year = int(film.get('year'))
+    except ValueError:
+        return {'error': 'Год должен быть числом'}, 400
+    
+    # Проверяем год выпуска
+    if year < 1895 or year > current_year:
+        return {'error': f'Год должен быть от 1895 до {current_year}'}, 400
+
+    # Проверяем описание
+    if not film.get('description') or len(film['description']) > 2000:
+        return {'error': 'Описание обязательно и не должно превышать 2000 символов'}, 400
+    
+
+    conn, cur = db_connect()
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute(
+            "INSERT INTO films (title, title_ru, year, description) VALUES (%s, %s, %s, %s) RETURNING id;",
+            (film['title'], film['title_ru'], film['year'], film['description'])
+        )
+        new_id = cur.fetchone()['id']
+    else:
+        cur.execute(
+            "INSERT INTO films (title, title_ru, year, description) VALUES (?, ?, ?, ?);",
+            (film['title'], film['title_ru'], film['year'], film['description'])
+        )
+        new_id = cur.lastrowid
+
+    db_close(conn, cur)
+    return jsonify({"id": new_id}), 201
