@@ -24,7 +24,7 @@ button:hover {
     border-radius: 10px;
 }
 h1, h2, label, div, a, p, blockquote {
-    color: white;
+    color: rgb(0, 0, 0);
     margin: 35px 0;
     font-weight: bold;
 }
@@ -33,7 +33,7 @@ body {
     min-height: 100vh;
 }
 a:hover {
-    color: rgb(254, 248, 230);
+    color: rgb(29, 28, 24);
     margin-top: 20px;
     transition: 0.5s;
 }
